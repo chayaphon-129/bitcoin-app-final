@@ -1,0 +1,57 @@
+services:
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    working_dir: /app
+    ports:
+      - "3001:3006"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    restart: always
+    depends_on:
+      - backend
+      - db
+    command: ["bun", "run", "dev"]
+    networks:
+      - bitcoin_app_network
+
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - "5001:5001"
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: ["bun", "run", "server.js"]
+    restart: always
+    environment:
+      PORT: 5001
+      DB_USER: postgres
+      DB_PASSWORD: MY@ym2562
+      DB_HOST: db
+      DB_PORT: 5433
+      DB_NAME: bitcoin_prices
+    depends_on:
+      - db
+    networks:
+      - bitcoin_app_network
+
+  db:
+    image: postgres:17-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: MY@ym2562
+      POSTGRES_DB: bitcoin_prices
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - bitcoin_app_network
+
+networks:
+  bitcoin_app_network:
+    driver: bridge

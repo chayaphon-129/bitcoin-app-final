@@ -1,0 +1,15 @@
+# ไม่คัดลอก node_modules และ dist ไปใน image
+node_modules
+dist
+
+# ไม่คัดลอกไฟล์ git และ Dockerfile เอง
+.git
+.gitignore
+Dockerfile
+.dockerignore
+
+# ไม่คัดลอกไฟล์ระบบและไฟล์ชั่วคราว
+*.md
+*.log
+*.env
+*.lock
